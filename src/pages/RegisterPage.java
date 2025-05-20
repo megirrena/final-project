@@ -1,15 +1,9 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
-
-
-public class RegisterPage {
-    private WebDriver driver;
-
+public class RegisterPage extends BasePage {
     private By titleRegisterPage = By.xpath("//h1[normalize-space()='Create an Account']");
     private By firstName = By.id("firstname");
     private By lastName = By.id("lastname");
@@ -21,32 +15,31 @@ public class RegisterPage {
     private By logOutButton = By.xpath("//a[@title='Log Out']");
 
     public RegisterPage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public String getTitleRegisterPage() {
-        return driver.findElement(titleRegisterPage).getText();
+        return getText(titleRegisterPage);
     }
 
     public void fillRegisterForm(String firstNameText, String lastNameText, String emailText, String passwordText) {
-        driver.findElement(firstName).sendKeys(firstNameText);
-        driver.findElement(lastName).sendKeys(lastNameText);
-        driver.findElement(email).sendKeys(emailText);
-        driver.findElement(password).sendKeys(passwordText);
-        driver.findElement(confirmPassword).sendKeys(passwordText);
+        type(firstName, firstNameText);
+        type(lastName, lastNameText);
+        type(email, emailText);
+        type(password, passwordText);
+        type(confirmPassword, passwordText);
     }
 
     public void clickRegister() {
-        WebElement registerBtn = driver.findElement(registerButton);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", registerBtn);
-        registerBtn.click();
-
+        scrollToElement(registerButton);
+        click(registerButton);
     }
 
     public String getMessageAfterRegister() {
-        return driver.findElement(messageAfterRegister).getText();
+        return getText(messageAfterRegister);
     }
+
     public void clickLogOutButton() {
-        driver.findElement(logOutButton).click();
+        click(logOutButton);
     }
 }

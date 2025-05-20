@@ -2,78 +2,57 @@ package pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 
-import java.time.Duration;
 import java.util.List;
 
-public class ManSectionPage {
-    WebDriver driver;
-    private WebDriverWait wait;
-
+public class ManSectionPage  extends BasePage{
 
     private By manLink = By.xpath("//a[@class='level0 has-children'][normalize-space()='Men']");
     private By viewAllMenLink = By.xpath("//a[normalize-space()='View All Men']");
     private By blackColorLink = By.xpath("//img[@title='Black']");
-    private By products = By.cssSelector(".products-grid .item");
+    private By borderedProducts = By.cssSelector(".option-black.is-media.filter-match.selected .swatch-link");
     private By blackProducts = By.xpath(".//li[contains(@class, 'option-black') and contains(@class, 'selected')]");
     private By priceSelect = By.xpath("//dd[2]//ol[1]//li[1]//a[1]");
-
+    private By products = By.cssSelector(".products-grid .item");
 
 
     public ManSectionPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
     }
 
     public void hoverOverManSection() {
-        WebElement ManSection = wait.until(ExpectedConditions.elementToBeClickable(manLink));
+        WebElement manSection = waitUtils.waitForElementToBeClickable(manLink);
         Actions actions = new Actions(driver);
-        actions.moveToElement(ManSection).perform();
-        driver.findElement(manLink).click();
+        actions.moveToElement(manSection).perform();
     }
 
     public void viewAllMenSection() {
-        driver.findElement(viewAllMenLink).click();
+        click(viewAllMenLink);
     }
-
     public void selectBlackColor() {
-        WebElement blackColor = driver.findElement(blackColorLink);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", blackColor);
-        blackColor.click();
+        scrollToElement(blackColorLink);
+        click(blackColorLink);
     }
 
+    public boolean isSelectedColorBorderBlue(WebElement product) {
+        try {
+            WebElement selectedSwatch = product.findElement(borderedProducts);
 
-    public boolean allProductsHaveBlackSelected() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(products));
+            String borderColor = selectedSwatch.getCssValue("border-color");
 
-        List<WebElement> productElements = driver.findElements(products);
-
-        for (WebElement product : productElements) {
-            try {
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", product);
-
-                wait.until(ExpectedConditions.visibilityOf(product));
-
-                List<WebElement> selectedBlackSwatches = product.findElements(blackProducts);
-
-                if (selectedBlackSwatches.isEmpty()) {
-                    return false;
-                }
-            } catch (StaleElementReferenceException e) {
-                return allProductsHaveBlackSelected();
-            }
+            return borderColor.contains("51, 153, 204");
+        } catch (NoSuchElementException e) {
+            System.out.println("Selected swatch not found for product.");
+            return false;
         }
-        return true;
     }
 
-
+    public List<WebElement> getDisplayedProducts() {
+        return waitUtils.waitForElementsToBeVisible(blackProducts);
+    }
 
     public void selectPrice() {
-        driver.findElement(priceSelect).click();
+        click(priceSelect);
     }
 
     public int getNumberOfDisplayedProducts() {
@@ -86,7 +65,7 @@ public class ManSectionPage {
         List<WebElement> priceElements = driver.findElements(By.cssSelector("span.price"));
         return priceElements.stream()
                 .map(WebElement::getText)
-                .map(priceText -> priceText.replace("$", "").trim()) // Remove $ and whitespace
+                .map(priceText -> priceText.replace("$", "").trim())
                 .map(Double::parseDouble)
                 .toList();
     }

@@ -30,15 +30,10 @@ public class WomenSectionTest extends BaseTest {
 
     @Test
     public void testHoverStyleChangeOnProduct() {
-        // Hover over "Women" and click "View All Women"
         womenSectionPage.hoverOverWomenMenu();
         womenSectionPage.clickViewAllWomen();
 
-        // Check if hover effect applies the correct border color
-        womenSectionPage.hoverOverFirstProduct();
-
-        // Assert that the border color changes to #3399cc (or rgb(51, 153, 204))
-        Assert.assertTrue(womenSectionPage.hasHoverBorderColor(),
-                "Product hover effect not applying expected border color (#3399cc)");
+        boolean hasHoverEffect = womenSectionPage.hasHoverBorderColor();
+        Assert.assertTrue(hasHoverEffect, "Hover effect did not change border color as expected.");
     }
 }

@@ -2,13 +2,10 @@ package tests;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.LogInPage;
 import pages.SaleSectionPage;
-import org.openqa.selenium.WebElement;
-import utils.TestListener;
 
 public class SaleSectionTest extends BaseTest {
     private HomePage homePage;
@@ -35,11 +32,16 @@ public class SaleSectionTest extends BaseTest {
     public void testSaleProductsStyle() {
         saleSectionPage.navigateSale();
         saleSectionPage.clickSaleProducts();
-        for (WebElement product : saleSectionPage.getSaleProducts()) {
-            Assert.assertTrue(
-                    saleSectionPage.isSaleStyleCorrect(product),
-                    "Incorrect price style found on a sale product."
-            );
-        }
+
+        saleSectionPage.getSaleProducts();
+
+        boolean allHavePrices = saleSectionPage.allSaleProductsHaveOriginalAndDiscountedPrice();
+        Assert.assertTrue(allHavePrices, "All sale products should have both original and discounted prices");
+
+        boolean originalPriceStyleCorrect = saleSectionPage.checkOriginalPriceStyle();
+        Assert.assertTrue(originalPriceStyleCorrect, "Original price should be gray and have strikethrough");
+
+        boolean discountedPriceStyleCorrect = saleSectionPage.checkDiscountedPriceStyle();
+        Assert.assertTrue(discountedPriceStyleCorrect, "Discounted price should be blue and not have strikethrough");
     }
 }

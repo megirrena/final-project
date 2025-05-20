@@ -5,7 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.*;
 
-public class ShoppingCartTest extends BaseTest {
+public class ShoppingCardTest extends BaseTest {
     private HomePage homePage;
     private LogInPage logInPage;
     private WomenSectionPage womenSectionPage;

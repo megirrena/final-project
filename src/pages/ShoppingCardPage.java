@@ -29,7 +29,7 @@ public class ShoppingCardPage {
     private By updateQuantityField = By.id("qty");
     private By updateButton = By.xpath("//span[contains(text(),'Update Cart')]");
 
-    // Added locators for price verification
+
     private By subtotalPrice1 = By.xpath("//span[contains(text(),'$300.00')]");
     private By subtotalPrice2 = By.xpath("//td[@class='product-cart-total']//span[@class='price'][normalize-space()='$185.00']");
     private By grandTotalPrice = By.cssSelector("strong span[class='price']");
@@ -42,8 +42,6 @@ public class ShoppingCardPage {
     public void clickMyWishList() {
         wait.until(ExpectedConditions.elementToBeClickable(myWishList)).click();
     }
-
-
 
     public void addToCartFirstItem() {
 
@@ -85,9 +83,9 @@ public class ShoppingCardPage {
     }
 
     public void setUpdatedQuantity(String quantity) {
-        WebElement qtyField = wait.until(ExpectedConditions.visibilityOfElementLocated(updateQuantityField));
-        qtyField.clear();
-        qtyField.sendKeys(quantity);
+        WebElement quantityField = wait.until(ExpectedConditions.visibilityOfElementLocated(updateQuantityField));
+        quantityField.clear();
+        quantityField.sendKeys(quantity);
     }
 
     public void clickUpdateButton() {

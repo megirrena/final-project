@@ -1,10 +1,11 @@
 package tests;
 
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pages.*;
 import java.util.List;
-import static org.testng.Assert.assertTrue;
 
 public class ManSectionTest extends BaseTest {
     private HomePage homePage;
@@ -28,26 +29,27 @@ public class ManSectionTest extends BaseTest {
     }
 
     @Test
-    public void testBlackColorFilterHighlightsSelectedSwatch() throws InterruptedException {
-        ManSectionPage manSectionPage = new ManSectionPage(driver);
+    public void testBlackColorFilterAndPrice() {
 
         manSectionPage.hoverOverManSection();
         manSectionPage.viewAllMenSection();
-
         manSectionPage.selectBlackColor();
-        boolean result = manSectionPage.allProductsHaveBlackSelected();
-        assertTrue(result, "Not all products have black color swatch selected with blue border.");
+
+        List<WebElement> products = manSectionPage.getDisplayedProducts();
+        Assert.assertFalse(products.isEmpty(), "No black color products are displayed.");
+
+        products.forEach(product ->
+                Assert.assertTrue(manSectionPage.isSelectedColorBorderBlue(product),
+                        "Product does not have a blue border.")
+        );
 
         manSectionPage.selectPrice();
+        Assert.assertEquals(manSectionPage.getNumberOfDisplayedProducts(), 3);
 
-        int actualCount = manSectionPage.getNumberOfDisplayedProducts();
-        int expectedCount = 3;
-        assertTrue(actualCount == expectedCount,
-                "Expected " + expectedCount + " products, but found " + actualCount);
-
-        List<Double> prices = manSectionPage.getDisplayedProductPrices();
-        for (double price : prices) {
-            assertTrue(price >= 70.00, "Found price below $70.00: $" + price);
-        }
+        manSectionPage.getDisplayedProductPrices().forEach(price ->
+                Assert.assertTrue(price >= 70.00,
+                        "Price is below expected minimum of $70.00: $" + price)
+        );
     }
+
 }

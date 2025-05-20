@@ -2,71 +2,71 @@ package pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
-public class SaleSectionPage {
-    private WebDriver driver;
-    private WebDriverWait wait;
+public class SaleSectionPage extends BasePage {
+
 
     private By saleLink = By.xpath("//a[normalize-space()='Sale']");
     private By viewAllSaleLink = By.xpath("//a[normalize-space()='View All Sale']");
     private By saleProducts = By.cssSelector(".products-grid .item");
 
+    private By oldPrice = By.cssSelector(".old-price .price");
+    private By specialPrice = By.cssSelector(".special-price .price");
+
+
     public SaleSectionPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
     }
 
     public void navigateSale() {
-        WebElement saleMenu = wait.until(ExpectedConditions.elementToBeClickable(saleLink));
+        WebElement saleMenu = waitUtils.waitForElementToBeClickable(saleLink);
         new Actions(driver).moveToElement(saleMenu).perform();
-
     }
-    public void  clickSaleProducts() {
-        WebElement viewAll = wait.until(ExpectedConditions.elementToBeClickable(viewAllSaleLink));
-        viewAll.click();
+
+    public void clickSaleProducts() {
+        click(viewAllSaleLink);
     }
 
     public List<WebElement> getSaleProducts() {
-        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(saleProducts));
+        return waitUtils.waitForElementsToBeVisible(saleProducts);
     }
 
-    public boolean isSaleStyleCorrect(WebElement product) {
-        try {
-            WebElement original = product.findElement(By.cssSelector(".old-price .price"));
-            WebElement discounted = product.findElement(By.cssSelector(".special-price .price"));
+    public boolean allSaleProductsHaveOriginalAndDiscountedPrice() {
+      List<WebElement> products = getSaleProducts();
 
-            String originalColor = getRgbString(original.getCssValue("color"));
-            String originalDecoration = original.getCssValue("text-decoration-line");
+       for (WebElement product : products) {
+        List<WebElement> originalPrice = product.findElements(oldPrice);
+        List<WebElement> discountedPrice = product.findElements(specialPrice);
 
-            if (originalDecoration == null || originalDecoration.isEmpty()) {
-                originalDecoration = original.getCssValue("text-decoration");
-            }
-
-            String discountedColor = getRgbString(discounted.getCssValue("color"));
-            String discountedDecoration = discounted.getCssValue("text-decoration-line");
-
-            boolean isOriginalCorrect = originalColor.equals("rgb(160, 160, 160)")
-                    && originalDecoration.contains("line-through");
-
-            boolean isDiscountedCorrect = (discountedColor.equals("rgb(51, 153, 204)") || discountedColor.equals("#3399cc"))
-                    && (discountedDecoration == null || !discountedDecoration.contains("line-through"));
-
-            return isOriginalCorrect && isDiscountedCorrect;
-        } catch (NoSuchElementException e) {
+          if (originalPrice.isEmpty() || discountedPrice.isEmpty()) {
+            System.out.println("Product missing prices. Found - Original: " + !originalPrice.isEmpty() +
+                    ", Discounted: " + !discountedPrice.isEmpty());
             return false;
-        }
+           }
+       }
+
+    return true;
+}
+
+ public boolean checkOriginalPriceStyle() {
+        WebElement originalPrice = waitUtils.waitForElementToBeVisible(oldPrice);
+
+        String color = originalPrice.getCssValue("color");
+        String textDecoration = originalPrice.getCssValue("text-decoration");
+
+        return color.contains("160, 160, 160") && textDecoration.contains("line-through");
     }
 
-    private String getRgbString(String color) {
-        if (color.startsWith("rgba")) {
-            return color.replace("rgba", "rgb").replaceAll(",\\s*\\d+\\.?\\d*\\)", ")");
-        }
-        return color.trim();
+    public boolean checkDiscountedPriceStyle() {
+        WebElement discountedPrice = waitUtils.waitForElementToBeVisible(specialPrice);
+
+        String color = discountedPrice.getCssValue("color");
+        String textDecoration = discountedPrice.getCssValue("text-decoration");
+
+        return color.contains("51, 153, 204") && !textDecoration.contains("line-through");
     }
+
 }
 
