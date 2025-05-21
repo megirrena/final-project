@@ -35,7 +35,6 @@ public class SortingTest extends BaseTest {
     public void testAddTwoItemsToWishlist() throws InterruptedException {
         sortingPage = new SortingPage(driver);
 
-        // Step 1: Add first item
         womenSectionPage.hoverOverWomenMenu();
         womenSectionPage.clickViewAllWomen();
         Thread.sleep(3000);
@@ -48,7 +47,6 @@ public class SortingTest extends BaseTest {
         sortingPage.clickAddWishlistFirstItem();
         Thread.sleep(3000);
 
-        // Step 2: Add second item (repeat everything)
         womenSectionPage.hoverOverWomenMenu();
         womenSectionPage.clickViewAllWomen();
         Thread.sleep(3000);
@@ -59,7 +57,6 @@ public class SortingTest extends BaseTest {
         sortingPage.clickAddWishlistSecondItem();
         Thread.sleep(3000);
 
-        // Step 3: Assert wishlist count
         homePage.clickAccountButton();
         String wishlistCount = sortingPage.getWishlistItemCount();
         Assert.assertEquals(wishlistCount, "My Wishlist (2 items)");

@@ -11,13 +11,12 @@ public class EmptyShoppingCardTest extends BaseTest {
     private LogInPage logInPage;
     private EmptyShoppingCardPage emptyShoppingCardPage;
 
-    @BeforeMethod(dependsOnMethods = "setUp") // This ensures BaseTest.setUp() runs first
-    public void setUpShoppingCart() { // Renamed method
+    @BeforeMethod
+    public void setUpPages() { // Renamed method
         homePage = new HomePage(driver);
         logInPage = new LogInPage(driver);
         emptyShoppingCardPage = new EmptyShoppingCardPage(driver);
 
-        // Sign in
         homePage.acceptCookies();
         homePage.acceptCookiesButton();
         homePage.clickAccountButton();
@@ -27,7 +26,6 @@ public class EmptyShoppingCardTest extends BaseTest {
         logInPage.setPassword("Test@1234");
         logInPage.setLoginButton();
 
-        // Navigate to cart
         homePage.clickCartIcon();
     }
 
@@ -37,7 +35,7 @@ public class EmptyShoppingCardTest extends BaseTest {
 
         while (previousCount > 0) {
             emptyShoppingCardPage.deleteFirstItem();
-            Thread.sleep(1000);  // Consider using WebDriverWait instead of Thread.sleep
+            Thread.sleep(1000);
 
             int currentCount = emptyShoppingCardPage.getCartItemCount();
             Assert.assertEquals(currentCount, previousCount - 1, "Item was not deleted properly.");

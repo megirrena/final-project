@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,27 +24,27 @@ public class SortingPage extends BasePage {
     }
 
     public boolean isPriceSorted(boolean ascending) {
-        List<WebElement> priceElements = driver.findElements(priceElementsLocator);
+        List<WebElement> priceElements = waitUtils.waitForElementsToBeVisible(priceElementsLocator);
 
-        WebElement firstPriceElement = priceElements.get(0);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", firstPriceElement);
+        if (priceElements.isEmpty()) return true;
+        scrollToElement(priceElementsLocator);
 
-        // Extract prices as doubles
         List<Double> prices = new ArrayList<>();
+        for (WebElement priceElement : priceElements) {
+            String priceText = priceElement.getText().replaceAll("[^\\d.]", "");
+            try {
+                prices.add(Double.parseDouble(priceText));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price format: " + priceText);
+            }
+        }
 
-
-        // Check if the list is sorted
         for (int i = 0; i < prices.size() - 1; i++) {
-            if (ascending) {
-                // For ascending order, current price should be <= next price
-                if (prices.get(i) > prices.get(i + 1)) {
-                    return false;
-                }
-            } else {
-                // For descending order, current price should be >= next price
-                if (prices.get(i) < prices.get(i + 1)) {
-                    return false;
-                }
+            if (ascending && prices.get(i) > prices.get(i + 1)) {
+                return false;
+            }
+            if (!ascending && prices.get(i) < prices.get(i + 1)) {
+                return false;
             }
         }
 
@@ -51,18 +52,19 @@ public class SortingPage extends BasePage {
     }
 
     public void clickAddWishlistFirstItem() {
-        WebElement item = waitUtils.waitForElementToBeClickable(addWishlistFirstItem);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", item);
-        item.click();
+        waitUtils.waitForElementToBeVisible(addWishlistFirstItem);
+        scrollToElement(addWishlistFirstItem);
+        click(addWishlistFirstItem);
     }
 
     public void clickAddWishlistSecondItem() {
-        WebElement item = waitUtils.waitForElementToBeClickable(addWishlistSecondItem);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", item);
-        item.click();
+        waitUtils.waitForElementToBeVisible(addWishlistSecondItem);
+        scrollToElement(addWishlistSecondItem);
+        click(addWishlistSecondItem);
     }
 
     public String getWishlistItemCount() {
-        return waitUtils.waitForElementToBeVisible(wishlistLocator).getText();
+        waitUtils.waitForElementToBeVisible(wishlistLocator);
+        return getText(wishlistLocator);
     }
 }

@@ -20,7 +20,6 @@ public class ShoppingCardTest extends BaseTest {
         sortingPage = new SortingPage(driver);
         shoppingCardPage = new ShoppingCardPage(driver);
 
-        // Sign in
         homePage.acceptCookies();
         homePage.acceptCookiesButton();
         homePage.clickAccountButton();
@@ -32,12 +31,10 @@ public class ShoppingCardTest extends BaseTest {
 
         homePage.clickAccountButton();
 
-
     }
 
     @Test
     public void testShoppingCart() {
-        // Add first item
         shoppingCardPage.clickMyWishList();
         shoppingCardPage.addToCartFirstItem();
         shoppingCardPage.selectColor1();
@@ -50,7 +47,6 @@ public class ShoppingCardTest extends BaseTest {
         homePage.clickAccountButton();
         shoppingCardPage.clickMyWishList();
 
-        // Add second item
         shoppingCardPage.addToCartSecondItem();
         shoppingCardPage.selectColor2();
         shoppingCardPage.selectSize2();
@@ -59,12 +55,10 @@ public class ShoppingCardTest extends BaseTest {
         String successMessage2 = shoppingCardPage.getAddedCartSuccess();
         Assert.assertTrue(successMessage2.contains("was added to your shopping cart."), "Second product was not added to cart.");
 
-        // Edit quantity in cart
         shoppingCardPage.clickEditLink();
         shoppingCardPage.setUpdatedQuantity("2");
         shoppingCardPage.clickUpdateButton();
 
-        // Verify that the sum of individual prices equals the grand total
         boolean pricesMatch = shoppingCardPage.verifyPricesSumToGrandTotal();
         Assert.assertTrue(pricesMatch, "The sum of individual item prices does not match the grand total");
     }

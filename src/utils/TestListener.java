@@ -19,13 +19,11 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
-        // Optional: Log test start
         System.out.println("Test started: " + result.getName());
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        // Optional: Log test success
         System.out.println("Test passed: " + result.getName());
     }
 
@@ -34,7 +32,6 @@ public class TestListener implements ITestListener {
         System.out.println("Test failed: " + result.getName() + ". Taking screenshot...");
 
         try {
-            // Get the driver from BaseTest
             Object testInstance = result.getInstance();
             WebDriver driver = WebDriverManager.getDriverFromTest(testInstance);
 
@@ -56,13 +53,11 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onStart(ITestContext context) {
-        // Create screenshots directory at the beginning of test execution
         createScreenshotDirectory();
     }
 
     @Override
     public void onFinish(ITestContext context) {
-        // Optional: Log test execution completion
         System.out.println("Test execution completed: " + context.getName());
     }
 
@@ -81,7 +76,6 @@ public class TestListener implements ITestListener {
         String screenshotDir = System.getProperty("user.dir") + "/screenshots/";
 
         try {
-            // Take screenshot
             File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             Path destPath = Paths.get(screenshotDir, screenshotName);
 

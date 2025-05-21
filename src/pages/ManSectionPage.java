@@ -5,7 +5,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
-public class ManSectionPage  extends BasePage{
+public class ManSectionPage  extends BasePage {
 
     private By manLink = By.xpath("//a[@class='level0 has-children'][normalize-space()='Men']");
     private By viewAllMenLink = By.xpath("//a[normalize-space()='View All Men']");

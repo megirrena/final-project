@@ -27,9 +27,6 @@ public class WaitUtils {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public boolean waitForTextToBePresentInElement(By locator, String text) {
-        return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, text));
-    }
 
     public List<WebElement> waitForElementsToBeVisible(By locator) {
         return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
