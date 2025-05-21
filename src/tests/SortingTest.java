@@ -37,22 +37,18 @@ public class SortingTest extends BaseTest {
 
         womenSectionPage.hoverOverWomenMenu();
         womenSectionPage.clickViewAllWomen();
-        Thread.sleep(3000);
 
         sortingPage.selectSortByPrice();
         Assert.assertTrue(sortingPage.isPriceSorted(true), "Prices are not sorted in ascending order.");
 
-        Thread.sleep(3000);
 
         sortingPage.clickAddWishlistFirstItem();
-        Thread.sleep(3000);
 
         womenSectionPage.hoverOverWomenMenu();
         womenSectionPage.clickViewAllWomen();
         Thread.sleep(3000);
 
         sortingPage.selectSortByPrice();
-        Thread.sleep(3000);
 
         sortingPage.clickAddWishlistSecondItem();
         Thread.sleep(3000);

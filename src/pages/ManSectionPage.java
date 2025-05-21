@@ -39,8 +39,8 @@ public class ManSectionPage  extends BasePage {
             WebElement selectedSwatch = product.findElement(borderedProducts);
 
             String borderColor = selectedSwatch.getCssValue("border-color");
-
             return borderColor.contains("51, 153, 204");
+
         } catch (NoSuchElementException e) {
             System.out.println("Selected swatch not found for product.");
             return false;

@@ -12,7 +12,7 @@ public class EmptyShoppingCardTest extends BaseTest {
     private EmptyShoppingCardPage emptyShoppingCardPage;
 
     @BeforeMethod
-    public void setUpPages() { // Renamed method
+    public void setUpPages() {
         homePage = new HomePage(driver);
         logInPage = new LogInPage(driver);
         emptyShoppingCardPage = new EmptyShoppingCardPage(driver);
